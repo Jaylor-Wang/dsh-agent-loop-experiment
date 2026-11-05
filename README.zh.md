@@ -1,13 +1,17 @@
----
-description: "面向用户与维护者的默认 agent（智能体）驱动器说明，用于选择、配置或调试 agent 的创建方式以及轮次与步骤的运行方式。"
-kind: "package-reference"
----
+# dsh-agent-loop-experiment
 
-# @deepseek-ai/dsh-agent-loop
+> **DeepSeek Harness (DSH) 可控收敛策略与 Agent 循环替换扩展**  
+> 围绕官方未修改核心实现的独立收敛策略（运行时调用指纹、有限恢复、文件写改控制、两阶段软工具要求）。
 
-本地副本已整理为独立实验包，安装、收敛策略及对照命令见 [EXPERIMENT.md](./EXPERIMENT.md)。官方循环实现保持原样，以下保留上游原说明。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/Jaylor-Wang/dsh-agent-loop-experiment.svg)](https://github.com/Jaylor-Wang/dsh-agent-loop-experiment/releases)
+[![DeepSeek Harness Compatibility](https://img.shields.io/badge/DSH-0.2.2--rc.1-brightgreen)](https://github.com/deepseek-ai/deepseek-harness)
+[![Tests](https://img.shields.io/badge/tests-61%20passed-brightgreen.svg)](test/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Types-blue.svg)](tsconfig.json)
 
 [English](README.md) | 中文
+
+本项目为 `@deepseek-ai/dsh-agent-loop` 的独立收敛实验包与热插拔替换补丁。安装方式、收敛策略配置与对照验证命令见 [EXPERIMENT.md](./EXPERIMENT.md)。官方循环核心副本保持字节级纯洁；以下保留官方上游说明文档。
 
 ## 概述
 

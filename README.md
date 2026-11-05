@@ -1,13 +1,17 @@
----
-description: "The default agent driver for users and maintainers choosing, configuring, or debugging how agents are created and how turns and steps run."
-kind: "package-reference"
----
+# dsh-agent-loop-experiment
 
-# @deepseek-ai/dsh-agent-loop
+> **Controllable Convergence Policy & Agent Loop Replacement for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) (DSH)**  
+> Isolated convergence policies (runtime fingerprinting, finite recovery, file mutation guards, soft tool requirements) around the unchanged official DSH agent loop.
 
-This local copy is an isolated, private experiment package. See [EXPERIMENT.md](./EXPERIMENT.md) for setup, convergence-policy configuration and A/B commands. The official loop implementation remains unchanged; the original upstream documentation follows.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/Jaylor-Wang/dsh-agent-loop-experiment.svg)](https://github.com/Jaylor-Wang/dsh-agent-loop-experiment/releases)
+[![DeepSeek Harness Compatibility](https://img.shields.io/badge/DSH-0.2.2--rc.1-brightgreen)](https://github.com/deepseek-ai/deepseek-harness)
+[![Tests](https://img.shields.io/badge/tests-61%20passed-brightgreen.svg)](test/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Types-blue.svg)](tsconfig.json)
 
 English | [中文](README.zh.md)
+
+This package is an isolated convergence-policy experiment and drop-in replacement bundle for `@deepseek-ai/dsh-agent-loop`. See [EXPERIMENT.md](./EXPERIMENT.md) for setup, runtime convergence policies, and A/B commands. The official loop implementation remains byte-identical; upstream documentation follows below.
 
 ## Summary
 

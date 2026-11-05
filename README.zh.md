@@ -6,7 +6,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/Jaylor-Wang/dsh-agent-loop-experiment.svg)](https://github.com/Jaylor-Wang/dsh-agent-loop-experiment/releases)
 [![DeepSeek Harness Compatibility](https://img.shields.io/badge/DSH-0.2.2--rc.1-brightgreen)](https://github.com/deepseek-ai/deepseek-harness)
-[![Tests](https://img.shields.io/badge/tests-61%20passed-brightgreen.svg)](test/)
+[![Tests](https://img.shields.io/badge/tests-63%20passed-brightgreen.svg)](test/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Types-blue.svg)](tsconfig.json)
 
 [English](README.md) | 中文

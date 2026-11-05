@@ -1,0 +1,11 @@
+{
+  "id": "independent-record-inspection",
+  "prompt": "Read all four named incident records using the provided tools. Report each record's confirmed incident count. Return only a JSON object with the keys api, billing, scheduler, workers and their integer counts. Finish when these four facts have been verified; no files need to be changed.",
+  "records": {
+    "api": "API incident record. Confirmed incident count: 17. Reviewed by the owning team; this is the final count.",
+    "billing": "Billing incident record. Confirmed incident count: 6. Reviewed by the owning team; this is the final count.",
+    "scheduler": "Scheduler incident record. Confirmed incident count: 11. Reviewed by the owning team; this is the final count.",
+    "workers": "Workers incident record. Confirmed incident count: 23. Reviewed by the owning team; this is the final count."
+  },
+  "expected": { "api": 17, "billing": 6, "scheduler": 11, "workers": 23 }
+}

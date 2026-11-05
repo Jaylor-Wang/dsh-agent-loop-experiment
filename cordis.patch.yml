@@ -1,0 +1,13 @@
+# Replace the service owner once; keep the upstream installation untouched.
+- id: agent-loop
+  name: '@deepseek-ai/dsh-agent-loop'
+  disabled: true
+- insert:
+    - id: dsh-agent-loop-experiment:loop
+      name: dsh-agent-loop-experiment/replacement
+      config:
+        agents: []
+        maxParallelToolCalls: 10
+        convergence:
+          enabled: true
+          softStepBudget: 8

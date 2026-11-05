@@ -1,0 +1,21 @@
+{
+  "provider": "experiment-api",
+  "model": "replace-with-your-model",
+  "reasoningEffort": "xhigh",
+  "softStepBudget": 8,
+  "timeoutMs": 180000,
+  "task": "./task.json",
+  "route": {
+    "api": "openai-completions",
+    "baseURL": "https://replace-with-your-endpoint.example/v1",
+    "apiKeyEnv": "DSH_EXPERIMENT_API_KEY",
+    "models": [
+      {
+        "id": "replace-with-your-model",
+        "contextWindow": 100000,
+        "input": ["text"],
+        "reasoningEfforts": { "high": "high", "xhigh": "xhigh" }
+      }
+    ]
+  }
+}

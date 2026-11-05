@@ -89,10 +89,12 @@ bundle 被移除后，禁用官方循环的补丁也随之消失；原 agent-loo
 | enabled | false | 显式开启收敛策略 |
 | softStepBudget | 8 | 完成这么多个模型步骤后，在下一次已经需要的请求中提醒一次 |
 | recoverFailedWrites | true | 策略开启时提供大段写入参数错误的短引用恢复；可独立关闭 |
-| runtimePolicy.mode | observe | 运行时观察策略模式：`off`（关闭）、`observe`（仅观测与统计，不拦截）、`enforce`（拦截无进展） |
+| runtimePolicy.mode | enforce | 运行时观察策略模式：`off`（关闭）、`observe`（仅观测与统计，不拦截）、`enforce`（拦截无进展与大 Shell Payload） |
 | runtimePolicy.noProgressLimit | 2 | 相同操作指纹连续重复的容忍阈值（enforce 下拦截连续重复无进展调用） |
 | runtimePolicy.recoveryAttemptLimit | 1 | 恢复引用可尝试次数上限 |
 | runtimePolicy.minLargeWriteBytes | 8192 | 大写入字节阈值判定标准 |
+| runtimePolicy.maxShellCommandBytes | 4096 | Shell 命令行安全字节阈值上限（防 Windows `spawn ENAMETOOLONG`） |
+| runtimePolicy.maxInlineScriptBytes | 512 | 单次内联脚本（`python -c` / `node -e`）安全字节阈值上限 |
 | fileMutationPolicy.mode | observe | 文件写/改策略模式：`off`、`observe`、`enforce` |
 | fileMutationPolicy.minLargeWriteBytes | 8192 | 大文件重写识别阈值（字节） |
 | fileMutationPolicy.reminderLimit | 1 | 针对重写风险的提示次数上限 |

@@ -204,3 +204,41 @@ test('RuntimePolicyManager in enforce mode denies repeated tool failure without 
   assert.ok(summary.noProgressHits >= 1);
   assert.equal(summary.uniqueNoProgressFingerprints, 1);
 });
+
+test('RuntimePolicyConfig defaults to enforce mode', () => {
+  const manager = new RuntimePolicyManager();
+  assert.equal(manager.config.mode, 'enforce');
+  assert.equal(manager.config.maxShellCommandBytes, 4096);
+  assert.equal(manager.config.maxInlineScriptBytes, 512);
+});
+
+test('RuntimePolicyManager denies oversized shell commands in enforce mode', () => {
+  const manager = new RuntimePolicyManager();
+  const session = {};
+  manager.onTurnStart(session, 1);
+
+  // Normal command is allowed
+  const normalExec = { name: 'bash', callId: 'c1', arguments: { command: 'npm test' } };
+  assert.equal(manager.evaluatePreExecute(session, normalExec).kind, 'allow');
+
+  // Command exceeding 4096 bytes is denied
+  const hugeCommand = 'echo ' + 'a'.repeat(4500);
+  const hugeExec = { name: 'bash', callId: 'c2', arguments: { command: hugeCommand } };
+  const resHuge = manager.evaluatePreExecute(session, hugeExec);
+  assert.equal(resHuge.kind, 'deny');
+  assert.equal(JSON.parse(resHuge.reason).code, 'EMBEDDED_SHELL_PAYLOAD_TOO_LARGE');
+
+  // Heredoc cat << 'EOF' > ... is denied
+  const heredocCommand = "cat << 'EOF' > make_page.py\n" + 'line of code\n'.repeat(30);
+  const heredocExec = { name: 'bash', callId: 'c3', arguments: { command: heredocCommand } };
+  const resHeredoc = manager.evaluatePreExecute(session, heredocExec);
+  assert.equal(resHeredoc.kind, 'deny');
+  assert.equal(JSON.parse(resHeredoc.reason).code, 'EMBEDDED_SHELL_PAYLOAD_TOO_LARGE');
+
+  // Large inline python -c script is denied
+  const inlineScriptCommand = `python -c "\nimport math\n` + `print('IK calculation step')\n`.repeat(30) + `"`;
+  const inlineScriptExec = { name: 'bash', callId: 'c4', arguments: { command: inlineScriptCommand } };
+  const resInline = manager.evaluatePreExecute(session, inlineScriptExec);
+  assert.equal(resInline.kind, 'deny');
+  assert.equal(JSON.parse(resInline.reason).code, 'EMBEDDED_SHELL_PAYLOAD_TOO_LARGE');
+});

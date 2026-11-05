@@ -5,10 +5,12 @@ import z from '@deepseek-ai/schemastery';
 export const POLICY_SOURCE = 'loop-runtime-policy';
 
 export const RuntimePolicyConfig = z.object({
-  mode: z.union(['off', 'observe', 'enforce']).default('observe'),
+  mode: z.union(['off', 'observe', 'enforce']).default('enforce'),
   noProgressLimit: z.number().step(1).min(1).default(2),
   recoveryAttemptLimit: z.number().step(1).min(1).max(1).default(1),
-  minLargeWriteBytes: z.number().step(1).min(1).default(8192)
+  minLargeWriteBytes: z.number().step(1).min(1).default(8192),
+  maxShellCommandBytes: z.number().step(1).min(256).default(4096),
+  maxInlineScriptBytes: z.number().step(1).min(128).default(512)
 });
 
 /**
@@ -296,6 +298,42 @@ export class RuntimePolicyManager {
     if (state.blockedInvocationKey === key) {
       return { kind: 'deny', reason: `[runtime-policy] Execution blocked: the same tool invocation was already denied after repeated identical failures.` };
     }
+
+    // Guard against oversized shell commands or large embedded scripts (anti-spawn ENAMETOOLONG on Windows)
+    if (name === 'bash' && exec.arguments && typeof exec.arguments.command === 'string') {
+      const cmd = exec.arguments.command;
+      const cmdBytes = Buffer.byteLength(cmd, 'utf8');
+      const isHeredoc = /(?:cat|type)\s*<<\s*['"]?EOF/i.test(cmd);
+      const isInlineScript = /(?:python|python3|node|pwsh)\s+(?:-c|-e|-Command)\s+['"][\s\S]+/i.test(cmd);
+
+      const maxBytes = this.config.maxShellCommandBytes ?? 4096;
+      const maxScriptBytes = this.config.maxInlineScriptBytes ?? 512;
+
+      if (cmdBytes > maxBytes) {
+        return {
+          kind: 'deny',
+          reason: JSON.stringify({
+            code: 'EMBEDDED_SHELL_PAYLOAD_TOO_LARGE',
+            reason: `Shell command size (${cmdBytes} bytes) exceeds safe limit of ${maxBytes} bytes (causes spawn ENAMETOOLONG on Windows).`,
+            nextAction: "Write the script or deliverable to a file using native 'write' first, then execute it by file path.",
+            retryable: false
+          })
+        };
+      }
+
+      if ((isHeredoc && cmdBytes > 256) || (isInlineScript && cmdBytes > maxScriptBytes)) {
+        return {
+          kind: 'deny',
+          reason: JSON.stringify({
+            code: 'EMBEDDED_SHELL_PAYLOAD_TOO_LARGE',
+            reason: `Large script or deliverable embedded in shell argument (${cmdBytes} bytes). Never embed complete scripts or files in shell commands.`,
+            nextAction: "Write a reusable script or deliverable using native 'write' first, then execute it by file path.",
+            retryable: false
+          })
+        };
+      }
+    }
+
     const lastRecord = state.lastRecord;
     const candidateFingerprint = computeFingerprint({
       name, targetPath: normalizePath(targetPath, state.cwd), opClass,

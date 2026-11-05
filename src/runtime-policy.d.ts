@@ -8,6 +8,8 @@ export interface RuntimePolicyOptions {
   noProgressLimit?: number;
   recoveryAttemptLimit?: number;
   minLargeWriteBytes?: number;
+  maxShellCommandBytes?: number;
+  maxInlineScriptBytes?: number;
 }
 
 export interface ToolFingerprintInput {
